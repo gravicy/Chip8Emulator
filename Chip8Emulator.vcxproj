@@ -24,6 +24,7 @@
     <ClCompile Include="src\SDLWrapper\SDLWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Chip8.h" />
     <ClInclude Include="src\SDLWrapper\Display.h" />
     <ClInclude Include="src\SDLWrapper\SDLWrapper.h" />
   </ItemGroup>
