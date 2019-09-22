@@ -24,6 +24,9 @@
     <ClCompile Include="src\SDLWrapper\SDLWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chip8.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\SDLWrapper\SDLWrapper.h">
@@ -32,7 +35,7 @@
     <ClInclude Include="src\SDLWrapper\Display.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Chip8.h">
+    <ClInclude Include="src\Chip8.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

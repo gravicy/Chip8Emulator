@@ -3,13 +3,17 @@
 #include <cstdint>
 #include <array>
 #include <stack>
+#include <string>
 
 class Chip8
 {
 private:
 	uint16_t					opcode;
 	std::array<uint8_t, 4096>	memory;
+
+	// Registers V0 to VE and VF-flag
 	std::array<uint8_t, 16>		vRegister;
+
 	uint16_t					indexRegister;
 	uint16_t					programCounter;
 	std::array<uint8_t, 64*32>	pixelMap;
