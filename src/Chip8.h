@@ -4,6 +4,8 @@
 #include <array>
 #include <stack>
 #include <string>
+#include <unordered_map>
+#include <functional>
 
 class Chip8
 {
@@ -23,6 +25,11 @@ private:
 	std::array<bool, 16>		keys;
 	bool						drawFlag;
 
+	typedef std::function<void()> Operation;
+
+	// for calling the correct function to the corresponding opcode
+	std::unordered_map<uint8_t, Operation> opcodeMap;
+
 public:
 	Chip8();
 
@@ -33,5 +40,4 @@ public:
 	bool getDrawFlag();
 
 	void setKeys(std::array<bool, 16>& keys);
-
 };

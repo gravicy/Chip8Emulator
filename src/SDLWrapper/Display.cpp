@@ -30,7 +30,7 @@ void SDLWrapper::Display::render(std::array<std::array<bool, 32>, 64>& pixelMap)
 		{
 			if (pixelMap[x][y])
 			{
-				SDL_Rect fillRect = { x, y, 1, 1 };
+				SDL_Rect fillRect = { x, y, 1u, 1u };
 				SDL_SetRenderDrawColor(SDLWrapper::Display::renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderFillRect(SDLWrapper::Display::renderer, &fillRect);
 			}

@@ -8,9 +8,6 @@ const int SCREEN_HEIGHT = 320;
 
 int main(int argc, char* argv[])
 {
-	Chip8 chip8;
-	chip8.loadGame("SpaceInvaders.ch8");
-
 	SDLWrapper::init(640, 320);
 
 	std::array<std::array<bool, 32>, 64> pixelMap;
@@ -22,10 +19,14 @@ int main(int argc, char* argv[])
 			value = false;
 		}
 	}
-	pixelMap[0][0] = true;
-	pixelMap[63][0] = true;
-	pixelMap[63][31] = true;
-	pixelMap[0][31] = true;
+
+	Chip8 chip8;
+	chip8.loadGame("SpaceInvaders.ch8");
+
+	while (true)
+	{
+		chip8.emulateCycle();
+	}
 
 	std::array<bool, 16> keys;
 
