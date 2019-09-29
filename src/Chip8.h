@@ -34,6 +34,10 @@ private:
 	std::unordered_map<uint16_t, Operation> opcodeMapE;
 	std::unordered_map<uint16_t, Operation> opcodeMapF;
 
+	// for operation awaiting a key press
+	bool waitingForKey;
+	bool interrupt;
+
 public:
 	Chip8();
 
@@ -45,5 +49,5 @@ public:
 
 	const std::array<bool, 64 * 32>& getPixelMap();
 
-	void setKeys(std::array<bool, 16>& keys);
+	void setKeys(const std::array<bool, 16>& keys);
 };
