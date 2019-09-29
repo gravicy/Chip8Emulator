@@ -15,6 +15,9 @@ int main(int argc, char* argv[])
 
 	std::array<bool, 16> keys;
 
+	for (bool& key : keys)
+		key = false;
+
 	// checkInput returns false if the user quits the application
 	while (SDLWrapper::checkInput(keys))
 	{

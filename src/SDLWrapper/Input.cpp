@@ -51,17 +51,14 @@ namespace SDLWrapper
 					if (sdlEvent.key.keysym.sym == SDLK_ESCAPE)
 						return false;
 
-					auto index = std::distance(keyMap.begin(), 
-						std::find(keyMap.begin(), keyMap.end(), sdlEvent.key.keysym.sym));
-
-					keys[index] = 1;
+					keys[std::distance(keyMap.begin(),
+						std::find(keyMap.begin(), keyMap.end(), sdlEvent.key.keysym.sym))] = 1;
 					break;
 
 				case SDL_KEYUP:
-					auto index = std::distance(keyMap.begin(),
-						std::find(keyMap.begin(), keyMap.end(), sdlEvent.key.keysym.sym));
 
-					keys[index] = 0;
+					keys[std::distance(keyMap.begin(),
+						std::find(keyMap.begin(), keyMap.end(), sdlEvent.key.keysym.sym))] = 0;
 					break;
 
 				default:

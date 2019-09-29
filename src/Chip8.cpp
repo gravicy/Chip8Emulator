@@ -6,70 +6,57 @@
 Chip8::Chip8()
 	: opcode(0), memory(), vRegister(), indexRegister(0)
 	, programCounter(0x0u), pixelMap(), delayTimer(0), soundTimer(0)
-	, stack(), keys(), drawFlag(false), opcodeMap()
+	, stack(), keys(), drawFlag(false), opcodeMap(), opcodeMap0()
+	, opcodeMap8(), opcodeMapE(), opcodeMapF()
 {
-	opcodeMap[0x0u] = [this]()
+	for (bool& pixel : pixelMap)
 	{
-		switch (opcode & 0x000F)
-		{
-		case 0x0000:
-			for (bool& pixel : pixelMap)
-			{
-				pixel = false;
-			}
-			drawFlag = true;
-			programCounter += 2;
-			break;
+		pixel = false;
+	}
 
-		case 0x000E:
-			programCounter = stack.top();
-			stack.pop();
-			programCounter += 2;
-			break;
-
-		default:
-			break;
-		}
-	};
-
-	opcodeMap[0x1u] = [this]()
-	{
-		programCounter = opcode & 0x0FFF;
-	};
-
-	opcodeMap[0x2u] = [this]()
-	{
-		stack.push(programCounter);
-		programCounter = opcode & 0x0FFF;
-	};
-
-	opcodeMap[0x3u] = [this]()
+	opcodeMap[0x0000u] = [this]() { opcodeMap0[opcode & 0x000F](); };
+	opcodeMap[0x1000u] = [this]() { programCounter = opcode & 0x0FFF; };
+	opcodeMap[0x2000u] = [this]() { stack.push(programCounter); programCounter = opcode & 0x0FFF; };
+	opcodeMap[0x3000u] = [this]()
 	{
 		if (vRegister[(opcode & 0x0F00) >> 8] == (opcode & 0x0FF))
 			programCounter += 4;
 		else
 			programCounter += 2;
 	};
-
-	opcodeMap[0x4u] = [this]()
+	opcodeMap[0x4000u] = [this]()
 	{
 		if (vRegister[(opcode & 0x0F00) >> 8] != (opcode & 0x0FF))
 			programCounter += 4;
 		else
 			programCounter += 2;
 	};
-
-	opcodeMap[0x5u] = [this]()
+	opcodeMap[0x5000u] = [this]()
 	{
 		if (vRegister[(opcode & 0x0F00) >> 8] == vRegister[(opcode & 0x00F0 >> 4)])
 			programCounter += 4;
 		else
 			programCounter += 2;
 	};
+	opcodeMap[0x6000u] = [this]() { vRegister[(opcode & 0x0F00) >> 8] = (opcode & 0x00FF); programCounter += 2; };
+	opcodeMap[0x7000u] = [this]() { vRegister[(opcode & 0x0F00) >> 8] += (opcode & 0x00FF); programCounter += 2; };
+	opcodeMap[0x8000u] = [this]() { opcodeMap8[opcode & 0x000F](); };
+	opcodeMap[0xA000u] = [this]() { indexRegister = opcode & 0x0FFF; programCounter += 2; };
 
-	opcodeMap[0xAu] = [this]()
+	//// opcodes starting with 0x0, differentiated by the last 4 bits
+	opcodeMap0[0x0000u] = [this]()
 	{
-		indexRegister = opcode & 0x0FFF;
+		for (bool& pixel : pixelMap)
+		{
+			pixel = false;
+		}
+		drawFlag = true;
+		programCounter += 2;
+	};
+	opcodeMap0[0x000Eu] = [this]()
+	{
+		programCounter = stack.top();
+		stack.pop();
 		programCounter += 2;
 	};
 }
@@ -99,7 +86,7 @@ void Chip8::emulateCycle()
 
 	opcode = memory[programCounter] << 8 | memory[programCounter + 1];
 
-	uint8_t mapKey = (opcode & 0xF000) >> 12;
+	uint16_t mapKey = opcode & 0xF000;
 
 	// if there is no valid opcode, just increase the program counter until all opcodes are implemented
 	if (opcodeMap.find(mapKey) == opcodeMap.end())

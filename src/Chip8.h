@@ -28,7 +28,11 @@ private:
 	typedef std::function<void()> Operation;
 
 	// for calling the correct function to the corresponding opcode
-	std::unordered_map<uint8_t, Operation> opcodeMap;
+	std::unordered_map<uint16_t, Operation> opcodeMap;
+	std::unordered_map<uint16_t, Operation> opcodeMap0;
+	std::unordered_map<uint16_t, Operation> opcodeMap8;
+	std::unordered_map<uint16_t, Operation> opcodeMapE;
+	std::unordered_map<uint16_t, Operation> opcodeMapF;
 
 public:
 	Chip8();
