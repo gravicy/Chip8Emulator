@@ -15,12 +15,13 @@ int main(int argc, char* argv[])
 
 	std::array<bool, 16> keys;
 
-	while (true)
+	// checkInput returns false if the user quits the application
+	while (SDLWrapper::checkInput(keys))
 	{
 		chip8.emulateCycle();
 
 		if (chip8.getDrawFlag())
-			SDLWrapper::renderAndCheckInput(chip8.getPixelMap(), keys);
+			SDLWrapper::render(chip8.getPixelMap());
 	}
 
 	SDLWrapper::quit();

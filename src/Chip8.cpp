@@ -51,6 +51,22 @@ Chip8::Chip8()
 			programCounter += 2;
 	};
 
+	opcodeMap[0x4u] = [this]()
+	{
+		if (vRegister[(opcode & 0x0F00) >> 8] != (opcode & 0x0FF))
+			programCounter += 4;
+		else
+			programCounter += 2;
+	};
+
+	opcodeMap[0x5u] = [this]()
+	{
+		if (vRegister[(opcode & 0x0F00) >> 8] == vRegister[(opcode & 0x00F0 >> 4)])
+			programCounter += 4;
+		else
+			programCounter += 2;
+	};
+
 	opcodeMap[0xAu] = [this]()
 	{
 		indexRegister = opcode & 0x0FFF;

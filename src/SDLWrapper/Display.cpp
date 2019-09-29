@@ -1,5 +1,7 @@
 #include "Display.h"
 
+#include <SDL.h>
+
 namespace SDLWrapper
 {
 	namespace Display

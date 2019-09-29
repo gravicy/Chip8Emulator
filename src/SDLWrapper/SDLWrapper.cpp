@@ -1,16 +1,30 @@
 #include "SDLWrapper.h"
 #include "Display.h"
+#include "Input.h"
+
+#include <SDL.h>
 
 namespace SDLWrapper
 {
 	bool init(const int width, const int height)
 	{
-		return Display::init(width, height);
+		return (Display::init(width, height) && Input::init());
 	}
 
-	void renderAndCheckInput(const std::array<bool, 64 * 32>& pixelMap, const std::array<bool, 16>& keys)
+	void render(const std::array<bool, 64 * 32>& pixelMap)
 	{
 		Display::render(pixelMap);
+	}
+
+	bool checkInput(std::array<bool, 16>& keys)
+	{
+		if (!Input::setKeys(keys))
+		{
+			quit();
+			return false;
+		}
+
+		return true;
 	}
 
 	void quit()
