@@ -18,7 +18,7 @@ private:
 
 	uint16_t					indexRegister;
 	uint16_t					programCounter;
-	std::array<uint8_t, 64*32>	pixelMap;
+	std::array<bool, 64*32>		pixelMap;
 	uint16_t					delayTimer;
 	uint16_t					soundTimer;
 	std::stack<uint16_t>		stack;
@@ -38,6 +38,8 @@ public:
 	void emulateCycle();
 
 	bool getDrawFlag();
+
+	const std::array<bool, 64 * 32>& getPixelMap();
 
 	void setKeys(std::array<bool, 16>& keys);
 };
