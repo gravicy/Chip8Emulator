@@ -31,7 +31,7 @@ namespace SDLWrapper
 			return true;
 		}
 
-		void render(const std::array<bool, 64*32>& pixelMap)
+		void render(const std::array<std::array<bool, 32>, 64>& pixelMap)
 		{
 			SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
 			SDL_RenderClear(renderer);
@@ -40,7 +40,7 @@ namespace SDLWrapper
 			{
 				for (unsigned int y = 0; y < 32; y++)
 				{
-					if (pixelMap[x + y * 32])
+					if (pixelMap[x][y])
 					{
 						SDL_Rect fillRect = { x, y, 1u, 1u };
 						SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -50,9 +50,6 @@ namespace SDLWrapper
 			}
 
 			SDL_RenderPresent(renderer);
-
-			// TODO remove
-			SDL_Delay(5000);
 		}
 
 		void quit()

@@ -48,18 +48,27 @@ namespace SDLWrapper
 					return false;
 
 				case SDL_KEYDOWN:
+				{
 					if (sdlEvent.key.keysym.sym == SDLK_ESCAPE)
 						return false;
 
-					keys[std::distance(keyMap.begin(),
-						std::find(keyMap.begin(), keyMap.end(), sdlEvent.key.keysym.sym))] = 1;
+					auto distance = std::distance(keyMap.begin(),
+						std::find(keyMap.begin(), keyMap.end(), sdlEvent.key.keysym.sym));
+
+					if (distance < 16)
+						keys[distance] = 1;
 					break;
+				}
 
 				case SDL_KEYUP:
+				{
+					auto distance = std::distance(keyMap.begin(),
+						std::find(keyMap.begin(), keyMap.end(), sdlEvent.key.keysym.sym));
 
-					keys[std::distance(keyMap.begin(),
-						std::find(keyMap.begin(), keyMap.end(), sdlEvent.key.keysym.sym))] = 0;
+					if (distance < 16)
+						keys[distance] = 0;
 					break;
+				}
 
 				default:
 					break;

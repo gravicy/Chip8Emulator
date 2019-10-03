@@ -331,3 +331,4 @@ ASALocalRun/
 
 # game binaries
 *.ch8
+/Roms

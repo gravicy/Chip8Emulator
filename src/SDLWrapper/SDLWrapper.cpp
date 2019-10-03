@@ -11,7 +11,7 @@ namespace SDLWrapper
 		return (Display::init(width, height) && Input::init());
 	}
 
-	void render(const std::array<bool, 64 * 32>& pixelMap)
+	void render(const std::array<std::array<bool, 32>, 64>& pixelMap)
 	{
 		Display::render(pixelMap);
 	}
