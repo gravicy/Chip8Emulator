@@ -4,6 +4,7 @@
 #include <random>
 #include <iostream>
 #include <algorithm>
+#include <cfloat>
 
 Chip8::Chip8()
 	: opcode(0), memory(), vRegister(), indexRegister(0x200)
