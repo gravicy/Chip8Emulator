@@ -80,37 +80,15 @@ std::array<bool, 16>& Chip8::getKeys()
 
 void Chip8::initOpCodeMaps()
 {
-	opcodeMap[0x0000] = [this]()
-	{
-		/*auto mapKey = opcode & 0x000F;
-		if (opcodeMap0.find(mapKey) == opcodeMap0.end())
-			programCounter += 2;
-		else
-		{*/
-			opcodeMap0[opcode & 0x000F]();
-			programCounter += 2;
-		/*}*/
-	};
-	opcodeMap[0x1000] = [this]()
-	{
-		programCounter = opcode & 0x0FFF;
-	};
+	opcodeMap[0x0000] = [this]() { opcodeMap0[opcode & 0x000F](); programCounter += 2; };
+	opcodeMap[0x1000] = [this]() { programCounter = opcode & 0x0FFF; };
 	opcodeMap[0x2000] = [this]() { stack.push(programCounter); programCounter = opcode & 0x0FFF; };
 	opcodeMap[0x3000] = [this]() { programCounter += vRegister[(opcode & 0x0F00) >> 8] == (opcode & 0x0FF) ? 4 : 2; };
 	opcodeMap[0x4000] = [this]() { programCounter += vRegister[(opcode & 0x0F00) >> 8] != (opcode & 0x0FF) ? 4 : 2; };
 	opcodeMap[0x5000] = [this]() { programCounter += vRegister[(opcode & 0x0F00) >> 8] == vRegister[(opcode & 0x00F0 >> 4)] ? 4 : 2; };
-	opcodeMap[0x6000] = [this]()
-	{
-		vRegister[(opcode & 0x0F00) >> 8] = (opcode & 0x00FF); programCounter += 2;
-	};
-	opcodeMap[0x7000] = [this]()
-	{
-		vRegister[(opcode & 0x0F00) >> 8] += (opcode & 0x00FF); programCounter += 2;
-	};
-	opcodeMap[0x8000] = [this]()
-	{
-		opcodeMap8[opcode & 0x000F]((opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4); programCounter += 2;
-	};
+	opcodeMap[0x6000] = [this]() { vRegister[(opcode & 0x0F00) >> 8] = (opcode & 0x00FF); programCounter += 2; };
+	opcodeMap[0x7000] = [this]() { vRegister[(opcode & 0x0F00) >> 8] += (opcode & 0x00FF); programCounter += 2; };
+	opcodeMap[0x8000] = [this]() { opcodeMap8[opcode & 0x000F]((opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4); programCounter += 2; };
 	opcodeMap[0x9000] = [this]() { programCounter += vRegister[(opcode & 0x0F00) >> 8] != vRegister[(opcode & 0x00F0 >> 4)] ? 4 : 2; };
 	opcodeMap[0xA000] = [this]() { indexRegister = opcode & 0x0FFF; programCounter += 2; };
 	opcodeMap[0xB000] = [this]() { programCounter = vRegister[0x0] + (opcode & 0x0FFF); };
@@ -150,17 +128,7 @@ void Chip8::initOpCodeMaps()
 		programCounter += 2;
 	};
 	opcodeMap[0xE000] = [this]() { opcodeMapE[opcode & 0x00FF]((opcode & 0x0F00) >> 8); programCounter += 2; };
-	opcodeMap[0xF000] = [this]()
-	{
-		/*auto mapKey = (opcode & 0x0F00) >> 8;
-		if (opcodeMapF.find(mapKey) == opcodeMapF.end())
-			programCounter += 2;
-		else
-		{*/
-			opcodeMapF[opcode & 0x00FF]((opcode & 0x0F00) >> 8);
-			programCounter += 2;
-		/*}*/
-	};
+	opcodeMap[0xF000] = [this]() { opcodeMapF[opcode & 0x00FF]((opcode & 0x0F00) >> 8); programCounter += 2; };
 
 	//// opcodes starting with 0x0, differentiated by the last 4 bits
 	opcodeMap0[0x0000] = [this]() { for (auto& pixelArray : pixelMap) for (bool& pixel : pixelArray) pixel = false; drawFlag = true; };
@@ -175,24 +143,14 @@ void Chip8::initOpCodeMaps()
 	opcodeMap8[0x0005] = [this](int x, int y) { vRegister[0xF] = (vRegister[x] > vRegister[y]) ? 1 : 0;	vRegister[x] -= vRegister[y]; };
 	opcodeMap8[0x0006] = [this](int x, int y) { vRegister[0xF] = vRegister[x] & 0x1; vRegister[x] = vRegister[x] >> 1; };
 	opcodeMap8[0x0007] = [this](int x, int y) { vRegister[0xF] = (vRegister[y] > vRegister[x]) ? 1 : 0; vRegister[x] = vRegister[y] - vRegister[x]; };
-	opcodeMap8[0x000E] = [this](int x, int y)
-	{
-		// carry flag
-		// TODO: maybe 0x10 instead of 0x80?
-		vRegister[0xF] = vRegister[x] & 0x80;
-
-		vRegister[x] = vRegister[x] << 1;
-	};
+	opcodeMap8[0x000E] = [this](int x, int y) { /*carry flag*/ vRegister[0xF] = vRegister[x] & 0x80; vRegister[x] = vRegister[x] << 1; };
 
 	//// opcodes starting with 0xE, differentiated by the last 8 bits
 	opcodeMapE[0x009E] = [this](int x) { if (keys[vRegister[x]]) programCounter += 2; };
 	opcodeMapE[0x00A1] = [this](int x) { if (!keys[vRegister[x]]) programCounter += 2; };
 
 	//// opcodes starting with 0xF, differentiated by the last 8 bits
-	opcodeMapF[0x0007] = [this](int x)
-	{
-		vRegister[(opcode & 0x0F00) >> 8] = delayTimer;
-	};
+	opcodeMapF[0x0007] = [this](int x) { vRegister[(opcode & 0x0F00) >> 8] = delayTimer; };
 	opcodeMapF[0x000A] = [this](int x)
 	{
 		for (auto i = 0; i < keys.size(); i++)
@@ -203,7 +161,6 @@ void Chip8::initOpCodeMaps()
 				return;
 			}
 		}
-
 		programCounter -= 2;
 	};
 	opcodeMapF[0x0015] = [this](int x) { delayTimer = vRegister[(opcode & 0x0F00) >> 8]; };

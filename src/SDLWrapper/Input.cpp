@@ -9,7 +9,8 @@ namespace SDLWrapper
 	{
 		namespace
 		{
-			std::array<uint8_t, 16> keyMap{
+			std::array<uint8_t, 16> keyMap
+			{
 				SDLK_1,
 				SDLK_2,
 				SDLK_3,
